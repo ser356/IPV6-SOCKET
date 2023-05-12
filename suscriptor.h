@@ -20,17 +20,7 @@
 #include <sys/ioctl.h>
 #include <signal.h>
 #define SA struct sockaddr
-
-#define DEFAULT_MSG "Hola"
 #define DEFAULT_IP "ff02::1"
 #define DEFAULT_IF "eth0"
 #define DEFAULT_PORT "12345"
-#define DEFAULT_HOPS "1"
-#define DEFAULT_DELAY "1"
-void sigint_handler(int sig, int sockfd)
-{
-    printf("Se ha pulsado Ctrl+C cerrando socket %d\n",sig);
-    close(sockfd);
-    exit(0);
-}
-void sigint_handler(int sig, int sockfd);
+
