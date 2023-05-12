@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "difusor.h": "c",
+        "uio.h": "c"
+    }
+}
