@@ -22,5 +22,7 @@
 #define SA struct sockaddr
 #define DEFAULT_IP "ff02::1"
 #define DEFAULT_IF "eth0"
-#define DEFAULT_PORT "12345"
+#define DEFAULT_PORT "3333"
+#define DEFAULT_HOPS "1"
+#define DEFAULT_DELAY "1"
 

@@ -22,7 +22,7 @@ int main(int argc, char **argv)
 
     struct sockaddr_in6 servaddr, cliaddr;
     struct ipv6_mreq ipv6mreq;
-
+    long timevar;
     if (argc != 7)
     {
 
@@ -59,9 +59,11 @@ int main(int argc, char **argv)
 
     servaddr.sin6_family = AF_INET6;
     servaddr.sin6_addr = in6addr_any;
+    servaddr.sin6_port = htons(atoi(port-1));
     bzero(&cliaddr, sizeof(cliaddr));
 
     cliaddr.sin6_family = AF_INET6;
+    cliaddr.sin6_addr = in6addr_any;
     cliaddr.sin6_port = htons(atoi(port));
     if (inet_pton(AF_INET6, ip, &cliaddr.sin6_addr) <= 0)
     {
@@ -85,11 +87,18 @@ int main(int argc, char **argv)
         perror("setsockopt: error while adding the membership to the group\n");
         exit(-5);
     }
-    if (setsockopt(sockfd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, hops, sizeof(hops)) == -1)
+    if(setsockopt(sockfd, IPPROTO_IPV6, IPV6_MULTICAST_IF, (char *)&if_indice, sizeof(if_indice)) == -1){
+        perror("setsockopt: error while setting the interface\n");
+        exit(-6);
+    }
+    int ihops = atoi(hops);
+    if (setsockopt(sockfd, IPPROTO_IPV6, IPV6_MULTICAST_HOPS, &ihops, sizeof(ihops)) == -1)
     {
         perror("setsockopt: error while setting the hops\n");
         exit(-6);
     }
+    time(&timevar);
+    printf("Conexion started on %s %s %s at %s ", ifname, ip, port, ctime(&timevar));
     while (1)
     {
         if (sendto(sockfd, msg, strlen(msg), 0, (SA *)&cliaddr, sizeof(cliaddr)) < 0)
@@ -120,6 +129,7 @@ int registroSIGNAL()
 }
 
 // Manejador de SIGINT
+
 void sigint_handler()
 {
     fprintf(stderr, "\nCatched SIGINT!\n");
