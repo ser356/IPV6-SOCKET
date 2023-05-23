@@ -1,3 +1,10 @@
+/*
+** Fichero: multicast.c
+** Autores: Sergio García Seco
+** Usuario: i0791431
+** Función: Difusor de mensajes
+** DNI del alumno: 70971431
+*/
 #include "suscriptor.h"
 
 int main(int argc, char **argv)
@@ -77,4 +84,25 @@ int main(int argc, char **argv)
 
     close(sockfd);
     return 0;
+}
+// Registro de SIGINT
+int registroSIGNAL()
+{
+    struct sigaction action;
+    action.sa_handler = sigint_handler;
+    action.sa_flags = 0;
+
+    int var = sigemptyset(&(action.sa_mask));
+
+    var += sigaction(SIGINT, &action, NULL);
+    return var == 0 ? 0 : -1;
+}
+
+// Manejador de SIGINT
+
+void sigint_handler()
+{
+    fprintf(stderr, "\nCatched SIGINT!\n");
+    close(sockfd);
+    exit(0);
 }
